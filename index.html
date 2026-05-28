@@ -2,497 +2,530 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vũ Trụ Huyền ẢO & Cơn Mưa Cầu Vồng</title>
-    <!-- Bootstrap 5 CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vũ Trụ Huyền Diệu - Bản Siêu Cấp Chuyên Nghiệp 2026</title>
+    <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@300;500;700&display=swap" rel="stylesheet">
     
     <style>
+        /* ==========================================================================
+           1. THIẾT LẬP LÕI VŨ TRỤ & BIẾN ĐỒ HỌA CAO CẤP
+           ========================================================================== */
         :root {
-            /* Bạn có thể thay đổi ảnh mặt trời tại đây nếu muốn */
-            --sun-image: url('https://images.unsplash.com/photo-1525490829609-d166ddb58ee3?q=80&w=200&auto=format&fit=crop');
+            --space-dark: #020617;
+            --space-deep: #0f172a;
+            
+            /* Bảng màu Neon Tinh Tú phong thủy */
+            --star-hope-color: #ffd700;   
+            --star-wisdom-color: #38bdf8; 
+            --star-peace-color: #f43f5e;  
+            --star-luck-color: #4ade80;   
+            --star-dream-color: #a855f7;  
+            
+            --neon-glow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
             overflow: hidden;
-            background: radial-gradient(ellipse at bottom, #09131f 0%, #010408 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: background 2.5s ease;
+            background: radial-gradient(circle at center, var(--space-deep) 0%, var(--space-dark) 100%);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Khi trời mưa: Đổi sang tone bầu trời hừng sáng sau mưa */
-        body.rainy-day {
-            background: radial-gradient(circle at center, #7b8a9e 0%, #3a4b61 60%, #1e2733 100%);
+        body.mode-rainbow-active {
+            background: radial-gradient(circle at center, #334155 0%, #0f172a 70%, #020617 100%);
+            transition: background 2.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* --- ĐÁM MÂY CHÂN THẬT BAY BAY (Tự tạo bằng CSS thuần, không sợ lỗi link ảnh) --- */
-        .clouds-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-            pointer-events: none;
-            transition: all 2s ease;
+        .viewport-container {
+            position: relative;
+            width: 100%; height: 100%;
+        }
+
+        /* ==========================================================================
+           2. HỆ THỐNG SAO CHỚP TẮT ĐA KÍCH THƯỚC (TWINKLING STARS MATRIX)
+           ========================================================================== */
+        .starfield-matrix {
+            position: absolute; width: 100%; height: 100%; z-index: 1;
+            transition: opacity 1s ease;
         }
         
-        .cloud-group {
-            position: absolute;
-            width: 400px;
-            height: 140px;
-            animation: drift linear infinite;
-        }
-        
-        /* Tạo hình đám mây xốp mịn bằng cách ghép các khối tròn + blur sâu */
-        .cloud-part {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.15);
+        .celestial-dot {
+            position: absolute; 
+            background: #ffffff; 
             border-radius: 50%;
-            filter: blur(25px);
-            transition: background 2s ease, opacity 2s ease;
-        }
-        .part-1 { width: 180px; height: 180px; top: -40px; left: 30px; }
-        .part-2 { width: 220px; height: 220px; top: -70px; left: 120px; }
-        .part-3 { width: 160px; height: 160px; top: -30px; left: 26px; }
-        .part-4 { width: 200px; height: 100px; bottom: 0; left: 80px; }
-
-        /* Vị trí và thời gian bay ngẫu nhiên của các cụm mây */
-        .cg-1 { top: 10%; left: -30%; animation-duration: 70s; }
-        .cg-2 { top: 30%; left: -40%; animation-duration: 95s; animation-delay: -20s; }
-        .cg-3 { bottom: 15%; left: -35%; animation-duration: 110s; animation-delay: -45s; }
-
-        @keyframes drift {
-            0% { transform: translateX(-10vw); }
-            100% { transform: translateX(110vw); }
+            will-change: opacity;
+            box-shadow: 0 0 4px #ffffff;
         }
 
-        /* Khi vào trạng thái mưa: mây đổi sang màu trắng sáng nhẹ tản ra hài hòa */
-        body.rainy-day .cloud-part {
-            background: rgba(255, 255, 255, 0.35);
+        /* Các lớp kích thước sao */
+        .star-small { width: 1.2px; height: 1.2px; }
+        .star-medium { width: 2.2px; height: 2.2px; }
+        .star-large { width: 3.5px; height: 3.5px; box-shadow: 0 0 8px #ffffff; }
+
+        /* Hiệu ứng chớp nháy bất đồng bộ */
+        .star-twinkle-fast { animation: pulse-starlight 1s infinite alternate ease-in-out; }
+        .star-twinkle-medium { animation: pulse-starlight 1.8s infinite alternate ease-in-out; }
+        .star-twinkle-slow { animation: pulse-starlight 2.8s infinite alternate ease-in-out; }
+
+        @keyframes pulse-starlight {
+            0% { opacity: 0.1; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.1); }
         }
 
-        /* --- BẦU TRỜI SAO VŨ TRỤ (Z-INDEX: 1) --- */
-        .stars-container {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
+        /* ==========================================================================
+           3. MÂY TRÔI SVG GRAPHICS NỀN
+           ========================================================================== */
+        .cloud-environment {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 3; pointer-events: none; opacity: 0.12;
             transition: opacity 1.5s ease;
         }
-        .star-normal {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: blink var(--duration, 2s) infinite ease-in-out;
-        }
-        @keyframes blink {
-            0%, 100% { opacity: 0.1; transform: scale(0.6); }
-            50% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 8px rgba(255,255,255,0.8); }
+        
+        .cloud-structure {
+            position: absolute; width: 450px; height: 180px;
+            fill: rgba(255, 255, 255, 0.2);
+            animation: cloud-horizontal-drift linear infinite;
+            will-change: transform;
         }
 
-        /* 5 NGÔI SAO ĐẶC BIỆT CÓ HÀO QUANG NHẬN DIỆN */
-        .star-special {
-            position: absolute;
-            width: 32px;
-            height: 32px;
-            color: #fffa65;
-            cursor: pointer;
-            z-index: 5; /* Nằm trên mây ban đêm để dễ bấm */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            transition: transform 0.4s, opacity 1s;
-        }
-        .star-special::before {
-            content: '';
-            position: absolute;
-            width: 45px;
-            height: 45px;
-            border: 2px dashed rgba(255, 250, 101, 0.5);
-            border-radius: 50%;
-            animation: rotateHolo 7s linear infinite;
-        }
-        .star-special::after {
-            content: '';
-            position: absolute;
-            width: 55px;
-            height: 55px;
-            border: 1px solid rgba(255, 250, 101, 0.2);
-            border-radius: 50%;
-            animation: pulseHolo 2s infinite alternate;
-        }
-        .star-special:hover {
-            transform: scale(1.4) rotate(72deg);
-            color: #ffb142;
-        }
-        @keyframes rotateHolo { 100% { transform: rotate(360deg); } }
-        @keyframes pulseHolo {
-            0% { transform: scale(0.8); opacity: 0.3; }
-            100% { transform: scale(1.2); opacity: 0.9; box-shadow: 0 0 20px rgba(255, 250, 101, 0.5); }
+        #cloud-layer-1 { top: 10%; animation-duration: 110s; }
+        #cloud-layer-2 { top: 30%; animation-duration: 150s; animation-delay: -50s; }
+        #cloud-layer-3 { top: 60%; animation-duration: 130s; animation-delay: -20s; }
+
+        @keyframes cloud-horizontal-drift {
+            0% { transform: translate3d(-500px, 0, 0); }
+            100% { transform: translate3d(calc(100vw + 500px), 0, 0); }
         }
 
-        /* --- MẶT TRỜI CHIẾU NHẸ (Z-INDEX: 1 - NẰM SAU CẦU VỒNG) --- */
-        .sun {
-            position: absolute;
-            top: 38%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.4);
-            width: 240px;
-            height: 240px;
-            background: var(--sun-image);
-            background-size: cover;
-            border-radius: 50%;
-            box-shadow: 0 0 80px 25px #fffa65;
-            z-index: 1; 
-            opacity: 0;
-            transition: all 3.5s cubic-bezier(0.1, 0.8, 0.3, 1);
-            pointer-events: none;
-        }
-        .sun.active {
-            opacity: 0.55; 
-            transform: translate(-50%, -50%) scale(1.1);
+        /* ==========================================================================
+           4. 5 CHÒM SAO ĐỊNH DANH - THIẾT KẾ PHA LÊ
+           ========================================================================== */
+        .mythology-stars-hub {
+            position: absolute; width: 100%; height: 100%; z-index: 5;
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
 
-        /* --- CẦU VỒNG CHÍNH GIỮA MÀN HÌNH (Z-INDEX: 2) --- */
-        .rainbow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.9); 
-            width: 80vw;
-            height: 80vw;
-            border-radius: 50%;
-            border: 35px solid transparent;
-            border-top-color: rgba(255, 0, 0, 0.4);
-            box-shadow: 
-                0 -30px 0 -22px rgba(255, 127, 0, 0.35),
-                0 -60px 0 -44px rgba(255, 255, 0, 0.35),
-                0 -90px 0 -66px rgba(0, 255, 0, 0.25),
-                0 -120px 0 -88px rgba(0, 0, 255, 0.25),
-                0 -150px 0 -110px rgba(75, 0, 130, 0.2),
-                0 -180px 0 -132px rgba(148, 0, 211, 0.2);
-            filter: blur(8px);
-            z-index: 2; /* Đè lên phía trước mặt trời */
-            opacity: 0;
-            transition: all 3.5s ease;
-            pointer-events: none;
-        }
-        .rainbow.active {
-            opacity: 0.85;
-            transform: translate(-50%, -50%) scale(1.05);
+        .epic-star-anchor {
+            position: absolute; width: 60px; height: 60px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            will-change: transform;
         }
 
-        /* --- HIỆU ỨNG MƯA RƠI NHẸ (Z-INDEX: 3) --- */
-        .rain-container {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: 3;
-            pointer-events: none;
-            display: none;
-        }
-        .drop {
-            position: absolute;
-            background: linear-gradient(transparent, rgba(255,255,255,0.4));
-            width: 1px;
-            height: 50px;
-            animation: fall var(--speed) linear infinite;
-        }
-        @keyframes fall {
-            0% { transform: translateY(-100px); }
-            100% { transform: translateY(100vh); }
-        }
-
-        /* --- BẢNG NỘI DUNG TRUNG TÂM CÓ THANH CUỘN (Z-INDEX: 20) --- */
-        .content-box {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-            z-index: 20;
-            width: 90%;
-            max-width: 550px;
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 24px;
-            padding: 30px;
-            color: white;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            flex-direction: column;
-            max-height: 65vh;
-        }
-        .content-box.active {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .scrollable-content {
-            overflow-y: auto;
-            padding-right: 12px;
-            margin-bottom: 10px;
-            flex-grow: 1;
-        }
-        .scrollable-content::-webkit-scrollbar { width: 6px; }
-        .scrollable-content::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
-        .scrollable-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; }
-
-        .content-img {
-            width: 100%;
-            height: auto;
-            border-radius: 14px;
-            margin-top: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.15);
-        }
-
-        /* NÚT QUAY LẠI HÌNH GIỌT NƯỚC MŨI TÊN (Đã fix xoay thẳng thắn) */
-        .btn-rain-back {
-            background: rgba(52, 152, 219, 0.25);
-            border: 1px solid rgba(52, 152, 219, 0.5);
-            color: #74b9ff;
-            border-radius: 50%;
-            border-top-left-radius: 0%; 
-            transform: rotate(-45deg); 
-            width: 55px;
-            height: 55px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 15px auto 0;
-            cursor: pointer;
+        .star-luminescent-core {
+            font-size: 28px; z-index: 3;
+            text-shadow: 0 0 20px var(--star-color), 0 0 40px var(--star-color);
             transition: all 0.3s ease;
         }
-        .btn-rain-back i {
-            transform: rotate(45deg);
-            font-size: 22px;
+
+        .star-satellite-compass {
+            position: absolute; width: 70px; height: 70px;
+            border: 1px dashed var(--star-color); border-radius: 50%;
+            opacity: 0.3; animation: orbit-rotation 15s linear infinite;
+            z-index: 1; pointer-events: none;
         }
-        .btn-rain-back:hover {
-            background: rgba(52, 152, 219, 0.6);
-            color: white;
-            box-shadow: 0 0 20px #3498db;
-            transform: scale(1.1) rotate(-45deg); 
+
+        .star-legend-label {
+            position: absolute; bottom: -35px; left: 50%;
+            transform: translate3d(-50%, 0, 0);
+            white-space: nowrap; font-size: 11px; font-weight: 700;
+            font-family: 'Orbitron', sans-serif; letter-spacing: 2px;
+            padding: 4px 14px; background: rgba(2, 6, 23, 0.9);
+            border: 1px solid var(--star-color); border-radius: 20px;
+            color: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            transition: all 0.3s ease;
         }
+
+        @keyframes orbit-rotation { 100% { transform: rotate(360deg); } }
+
+        #myth-star-hope   { --star-color: var(--star-hope-color);   color: var(--star-hope-color); }
+        #myth-star-wisdom { --star-color: var(--star-wisdom-color); color: var(--star-wisdom-color); }
+        #myth-star-peace  { --star-color: var(--star-peace-color);  color: var(--star-peace-color); }
+        #myth-star-luck   { --star-color: var(--star-luck-color);   color: var(--star-luck-color); }
+        #myth-star-dream  { --star-color: var(--star-dream-color);  color: var(--star-dream-color); }
+
+        .epic-star-anchor:hover { transform: scale(1.35); }
+        .epic-star-anchor:hover .star-luminescent-core { text-shadow: 0 0 30px #ffffff; }
+        .epic-star-anchor:hover .star-legend-label { background: var(--star-color); color: #020617; box-shadow: 0 0 15px var(--star-color); }
+
+        /* ==========================================================================
+           5. KỲ QUAN CẦU VỒNG QUANG PHỔ SIÊU MỊN & MẶT TRỜI MỜ
+           ========================================================================== */
+        .celestial-wonders-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none;
+        }
+
+        .solar-orb {
+            position: absolute; top: 35%; left: 50%;
+            transform: translate3d(-50%, -50%, 0) scale(0.8);
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, #ffffff 0%, rgba(255,251,200,0.6) 40%, transparent 70%);
+            opacity: 0; transition: opacity 2s ease;
+        }
+
+        .vector-rainbow-bridge {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate3d(-50%, -50%, 0);
+            width: 88vw; height: 88vw; max-width: 920px; max-height: 920px;
+            opacity: 0; transition: opacity 2s ease;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, 
+                transparent 52%, 
+                rgba(168, 85, 247, 0.35) 54%,  
+                rgba(56, 189, 248, 0.4) 56%,  
+                rgba(45, 212, 191, 0.45) 58%,   
+                rgba(74, 222, 128, 0.45) 60%,   
+                rgba(250, 204, 21, 0.5) 62%,   
+                rgba(fb, 146, 60, 0.5) 64%,  
+                rgba(244, 63, 94, 0.55) 66%,   
+                transparent 68%
+            );
+            filter: blur(10px);
+            will-change: opacity;
+        }
+
+        .solar-orb.activated, .vector-rainbow-bridge.activated { opacity: 1; }
+
+        /* ==========================================================================
+           6. CƠN MƯA RƠI THỦY TINH TUYỆT ĐỐI MƯỢT MÀ
+           ========================================================================== */
+        .rain-precipitation-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 4; pointer-events: none; display: none;
+        }
+        .rain-laser-line {
+            position: absolute; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.25));
+            width: 1px; height: 60px;
+            animation: rain-fall-downfall var(--rain-speed) linear infinite;
+            will-change: transform;
+        }
+        @keyframes rain-fall-downfall {
+            0% { transform: translate3d(0, -70px, 0); }
+            100% { transform: translate3d(0, 105vh, 0); }
+        }
+
+        /* ==========================================================================
+           7. BẢNG ĐIỀU HÀNH HOLOGRAPHIC SIÊU ĐẸP & CHUYÊN NGHIỆP (PREMIUM UI)
+           ========================================================================== */
+        .cosmic-portal-card {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate3d(-50%, -50%, 0) scale(0.85);
+            z-index: 20; width: 92%; max-width: 520px;
+            
+            /* Kính mờ siêu cấp phối hợp viền dạ quang */
+            background: rgba(8, 14, 32, 0.75);
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            padding: 35px; color: #ffffff; opacity: 0; pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; flex-direction: column; max-height: 70vh;
+            box-shadow: 0 40px 90px rgba(0,0,0,0.7), inset 0 0 20px rgba(255,255,255,0.05);
+        }
+        
+        .cosmic-portal-card.activated {
+            opacity: 1; pointer-events: auto;
+            transform: translate3d(-50%, -50%, 0) scale(1);
+            border-color: var(--panel-glow-color);
+            box-shadow: 0 40px 90px rgba(0,0,0,0.8), 0 0 30px rgba(var(--panel-glow-rgb), 0.2);
+        }
+
+        /* Tiêu đề phong cách tối tân */
+        .portal-header-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900; letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px var(--panel-glow-color);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 15px;
+        }
+
+        .scrollable-space { overflow-y: auto; padding-right: 8px; flex-grow: 1; margin-top: 15px; }
+        .scrollable-space::-webkit-scrollbar { width: 5px; }
+        .scrollable-space::-webkit-scrollbar-track { background: transparent; }
+        .scrollable-space::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+
+        .portal-text-content {
+            font-size: 14.5px; line-height: 1.7; color: #cbd5e1; font-weight: 300; text-align: justify;
+        }
+
+        /* Khung hiển thị tranh nghệ thuật */
+        .image-container-premium {
+            position: relative; border-radius: 16px; overflow: hidden; margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .showcase-illustration {
+            width: 100%; height: 200px; object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        .image-container-premium:hover .showcase-illustration { transform: scale(1.06); }
+
+        /* Nút giọt nước tối giản nghệ thuật */
+        .native-water-drop-trigger {
+            position: relative; width: 48px; height: 48px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%);
+            border-radius: 50%; margin: 25px auto 0; cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;
+        }
+        
+        .native-water-drop-trigger i { color: #ffffff; font-size: 18px; transition: transform 0.4s ease; }
+        
+        .native-water-drop-trigger:hover {
+            background: #ffffff; border-color: #ffffff;
+            box-shadow: 0 0 20px #ffffff;
+        }
+        .native-water-drop-trigger:hover i { color: #020617; transform: rotate(-180deg); }
     </style>
 </head>
 <body>
 
-    <!-- Đám mây nhẹ bay ngang chân thật -->
-    <div class="clouds-container" id="cloudsContainer">
-        <div class="cloud-group cg-1">
-            <div class="cloud-part part-1"></div><div class="cloud-part part-2"></div>
-            <div class="cloud-part part-3"></div><div class="cloud-part part-4"></div>
+    <div class="viewport-container">
+
+        <!-- Lớp mây trôi SVG nhẹ nhàng -->
+        <div class="cloud-environment">
+            <svg class="cloud-structure" id="cloud-layer-1" viewBox="0 0 100 100"><path d="M20 50 C20 40, 30 35, 40 40 C45 30, 60 30, 65 40 C75 35, 85 45, 80 55 C85 65, 75 75, 65 70 C60 80, 45 80, 40 70 C30 75, 20 65, 20 50 Z" /></svg>
+            <svg class="cloud-structure" id="cloud-layer-2" viewBox="0 0 100 100"><path d="M20 50 C20 40, 30 35, 40 40 C45 30, 60 30, 65 40 C75 35, 85 45, 80 55 C85 65, 75 75, 65 70 C60 80, 45 80, 40 70 C30 75, 20 65, 20 50 Z" /></svg>
+            <svg class="cloud-structure" id="cloud-layer-3" viewBox="0 0 100 100"><path d="M20 50 C20 40, 30 35, 40 40 C45 30, 60 30, 65 40 C75 35, 85 45, 80 55 C85 65, 75 75, 65 70 C60 80, 45 80, 40 70 C30 75, 20 65, 20 50 Z" /></svg>
         </div>
-        <div class="cloud-group cg-2">
-            <div class="cloud-part part-1"></div><div class="cloud-part part-2"></div>
-            <div class="cloud-part part-3"></div><div class="cloud-part part-4"></div>
-        </div>
-        <div class="cloud-group cg-3">
-            <div class="cloud-part part-1"></div><div class="cloud-part part-2"></div>
-            <div class="cloud-part part-3"></div><div class="cloud-part part-4"></div>
-        </div>
-    </div>
 
-    <!-- Bầu trời sao vũ trụ dày đặc -->
-    <div class="stars-container" id="starsContainer"></div>
+        <!-- Mạng lưới sao chớp tắt thông minh -->
+        <div class="starfield-matrix" id="starfieldMatrix"></div>
 
-    <!-- Mặt trời nằm chính giữa phía SAU cầu vồng -->
-    <div class="sun" id="sun"></div>
-
-    <!-- Cầu vồng nằm chính giữa bao quanh bảng nội dung -->
-    <div class="rainbow" id="rainbow"></div>
-
-    <!-- Hiệu ứng mưa rơi -->
-    <div class="rain-container" id="rainContainer"></div>
-
-    <!-- BẢNG NỘI DUNG TRUNG TÂM -->
-    <div class="content-box" id="contentBox">
-        <div class="scrollable-content text-center">
-            <h2 class="fw-bold mb-3 text-warning" id="boxTitle">Tiêu đề</h2>
-            <p class="lead" id="boxText">Nội dung...</p>
+        <!-- Đại sảnh 5 Tinh tú Thần thoại -->
+        <div class="mythology-stars-hub" id="mythologyStarsHub">
             
-            <!-- Danh sách ảnh cuộn -->
-            <div id="boxImages"></div>
+            <div class="epic-star-anchor" id="myth-star-hope" style="top: 24%; left: 12%;">
+                <div class="star-satellite-compass"></div>
+                <i class="bi bi-star-fill star-luminescent-core"></i>
+                <div class="star-legend-label">Hope</div>
+            </div>
+
+            <div class="epic-star-anchor" id="myth-star-wisdom" style="top: 50%; left: 28%;">
+                <div class="star-satellite-compass"></div>
+                <i class="bi bi-star-fill star-luminescent-core"></i>
+                <div class="star-legend-label">Wisdom</div>
+            </div>
+
+            <div class="epic-star-anchor" id="myth-star-peace" style="top: 18%; left: 50%;">
+                <div class="star-satellite-compass"></div>
+                <i class="bi bi-star-fill star-luminescent-core"></i>
+                <div class="star-legend-label">Peace</div>
+            </div>
+
+            <div class="epic-star-anchor" id="myth-star-luck" style="top: 54%; left: 72%;">
+                <div class="star-satellite-compass"></div>
+                <i class="bi bi-star-fill star-luminescent-core"></i>
+                <div class="star-legend-label">Luck</div>
+            </div>
+
+            <div class="epic-star-anchor" id="myth-star-dream" style="top: 30%; left: 88%;">
+                <div class="star-satellite-compass"></div>
+                <i class="bi bi-star-fill star-luminescent-core"></i>
+                <div class="star-legend-label">Dream</div>
+            </div>
+
         </div>
-        
-        <!-- Nút quay lại: Mũi tên giọt nước -->
-        <div class="btn-rain-back" id="btnBack" title="Nhấn giọt nước để quay lại vũ trụ...">
-            <i class="bi bi-arrow-counterclockwise"></i>
+
+        <!-- Lớp Kỳ Quan Vũ Trụ (Cầu vồng siêu mịn) -->
+        <div class="celestial-wonders-layer">
+            <div class="solar-orb" id="solarOrb"></div>
+            <div class="vector-rainbow-bridge" id="vectorRainbowBridge"></div>
         </div>
+
+        <!-- Màn mưa rơi chất lượng cao -->
+        <div class="rain-precipitation-layer" id="rainPrecipitationLayer"></div>
+
+        <!-- BẢNG NỘI DUNG FUTURE HOLOGRAPHIC (SIÊU CHUYÊN NGHIỆP) -->
+        <div class="cosmic-portal-card" id="cosmicPortalCard">
+            <h3 class="text-center mb-0 portal-header-title" id="portalTitle">SYSTEM DATA</h3>
+            
+            <div class="scrollable-space">
+                <p class="portal-text-content" id="portalDescription">Loading cosmic data...</p>
+                <div id="portalImagesWrapper" class="image-container-premium"></div>
+            </div>
+            
+            <!-- Nút đóng tối giản nghệ thuật -->
+            <div class="native-water-drop-trigger" id="btnBackToUniverse" title="Hồi quy vũ trụ">
+                <i class="bi bi-x-lg"></i>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <!-- HỆ THỐNG KỊCH BẢN ĐIỀU KHIỂN THIÊN VĂN -->
     <script>
-        const starsContainer = document.getElementById('starsContainer');
-        const rainContainer = document.getElementById('rainContainer');
-        const contentBox = document.getElementById('contentBox');
-        const boxTitle = document.getElementById('boxTitle');
-        const boxText = document.getElementById('boxText');
-        const boxImages = document.getElementById('boxImages');
-        const btnBack = document.getElementById('btnBack');
-        const sun = document.getElementById('sun');
-        const rainbow = document.getElementById('rainbow');
-
-        // Dữ liệu 5 ngôi sao đặc biệt kèm nhiều hình ảnh để test tính năng cuộn
-        const specialStarsData = [
-            { 
-                title: "Ngôi Sao Hy Vọng", 
-                text: "Sau cơn mưa trời lại sáng, cầu vồng rực rỡ xuất hiện ngay chính giữa bầu trời hòa cùng ánh nắng ấm áp.",
-                images: [
-                    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=500&auto=format&fit=crop",
-                    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=500&auto=format&fit=crop"
-                ]
+        // Cơ sở dữ liệu nội dung cao cấp phục vụ hiển thị chuyên nghiệp
+        const cosmicMasterRepository = {
+            'myth-star-hope': {
+                title: "Sao Hy Vọng - Triệt Tiêu Bóng Tối",
+                text: "Chòm sao mang nguồn ánh sáng vàng khởi nguyên của bình minh vũ trụ. Cổ sử thiên văn học ghi lại rằng, khi tinh vân Hy Vọng bước vào giai đoạn cực đỉnh quang phổ, những màn sương mù u tối sẽ bị phá tan, kích hoạt một dải cầu vồng hòa tan mềm mại ôm trọn bầu trời, mở ra kỷ nguyên mới thịnh vượng.",
+                images: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=600&auto=format&fit=crop",
+                rgb: "255, 215, 0"
             },
-            { 
-                title: "Ngôi Sao Trí Tuệ", 
-                text: "Vũ trụ bao la rộng lớn, ánh sáng từ cầu vồng và mặt trời sẽ khai sáng mọi tri thức sâu thẳm nhất.",
-                images: [
-                    "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=500&auto=format&fit=crop",
-                    "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=500&auto=format&fit=crop"
-                ]
+            'myth-star-wisdom': {
+                title: "Sao Trí Tuệ - Khai Mở Tâm Thức",
+                text: "Sở hữu sắc xanh thiên thanh đại diện cho tầng sâu thẳm của tư duy logic. Ánh sáng từ chòm sao Wisdom không rực lửa mà len lỏi nhẹ nhàng qua các hạt mưa pha lê tĩnh, giúp tâm trí người ngắm nhìn đạt đến trạng thái thiền định sâu sắc, thấu suốt mọi quy luật vĩ đại.",
+                images: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600&auto=format&fit=crop",
+                rgb: "56, 189, 248"
             },
-            { 
-                title: "Ngôi Sao Bình Yên", 
-                text: "Hãy lắng nghe tiếng mưa rơi nhẹ nhàng, ngắm nhìn ánh hào quang dịu nhẹ của cầu vồng để tâm hồn được thư thái.",
-                images: [
-                    "https://images.unsplash.com/photo-1486572788966-cfd3df1f5b42?q=80&w=500&auto=format&fit=crop"
-                ]
+            'myth-star-peace': {
+                title: "Sao Bình Yên - Bản Hòa Ca Vũ Trụ",
+                text: "Mang năng lượng của thạch anh hồng tinh khiết, chòm sao Peace có khả năng xoa dịu mọi xung đột hạt nhân trong không gian. Khi hành tinh này tỏa sáng, toàn bộ vũ trụ đêm như lắng đọng lại, nhường chỗ cho những giọt mưa rơi nhẹ nhàng hòa quyện cùng cầu vồng quang phổ mịn màng.",
+                images: "https://images.unsplash.com/photo-1486572788966-cfd3df1f5b42?q=80&w=600&auto=format&fit=crop",
+                rgb: "244, 63, 94"
             },
-            { 
-                title: "Ngôi Sao May Mắn", 
-                text: "Sự kết hợp tuyệt vời giữa ánh mặt trời chiếu nhẹ và vòng cầu vồng rực rỡ mang đến phép màu may mắn cho bạn.",
-                images: [
-                    "https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=500&auto=format&fit=crop"
-                ]
+            'myth-star-luck': {
+                title: "Sao May Mắn - Mạch Nguồn Thịnh Vượng",
+                text: "Chòm sao hộ mệnh mang sắc xanh ngọc bảo sinh thái quý hiếm. Tương truyền, bất kỳ phi thuyền không gian nào bắt được tần số sóng ánh sáng của sao Luck đều sẽ tìm thấy những tinh cầu trù phú tài nguyên. Cầu vồng xuất hiện lúc này chính là dải lụa cát tường.",
+                images: "https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=600&auto=format&fit=crop",
+                rgb: "74, 222, 128"
             },
-            { 
-                title: "Ngôi Sao Ước Mơ", 
-                text: "Cầu vồng chính giữa màn hình như một cánh cổng dẫn lối những giấc mơ của bạn bay cao và bay xa hơn.",
-                images: [
-                    "https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?q=80&w=500&auto=format&fit=crop",
-                    "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?q=80&w=500&auto=format&fit=crop"
-                ]
+            'myth-star-dream': {
+                title: "Sao Ước Mơ - Vượt Giới Hạn Không Gian",
+                text: "Sắc tím kỳ ảo của tinh vân Dream luôn là ẩn số đối với các nhà khoa học vĩ đại nhất. Nó là biểu tượng của những hoài bão vượt thời gian. Khi cánh cổng cầu vồng mịn màng mở ra, đó chính là tấm gương phản chiếu khao khát sâu thẳm nhất trong tâm hồn bạn.",
+                images: "https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?q=80&w=600&auto=format&fit=crop",
+                rgb: "168, 85, 247"
             }
-        ];
+        };
 
-        // 1. Tạo 350 ngôi sao vũ trụ nền lấp lánh ban đầu
-        function initSky() {
-            starsContainer.innerHTML = ''; 
-            for (let i = 0; i < 350; i++) {
+        const starfieldMatrix = document.getElementById('starfieldMatrix');
+        const rainPrecipitationLayer = document.getElementById('rainPrecipitationLayer');
+        const cosmicPortalCard = document.getElementById('cosmicPortalCard');
+        const portalTitle = document.getElementById('portalTitle');
+        const portalDescription = document.getElementById('portalDescription');
+        const portalImagesWrapper = document.getElementById('portalImagesWrapper');
+        const btnBackToUniverse = document.getElementById('btnBackToUniverse');
+        const solarOrb = document.getElementById('solarOrb');
+        const vectorRainbowBridge = document.getElementById('vectorRainbowBridge');
+        const mythologyStarsHub = document.getElementById('mythologyStarsHub');
+
+        // 1. Thuật toán sinh sao chớp tắt đa kích thước thông minh
+        function generateAdvancedStarfield() {
+            starfieldMatrix.innerHTML = '';
+            const fragment = document.createDocumentFragment();
+            const totalStars = 130;
+
+            for (let i = 0; i < totalStars; i++) {
                 const star = document.createElement('div');
-                star.classList.add('star-normal');
-                star.style.top = Math.random() * 95 + '%';
-                star.style.left = Math.random() * 100 + '%';
+                star.classList.add('celestial-dot');
                 
-                const size = Math.random() * 3 + 0.5 + 'px';
-                star.style.width = size;
-                star.style.height = size;
+                // Thiết lập tọa độ ngẫu nhiên
+                star.style.top = (Math.random() * 96) + '%';
+                star.style.left = (Math.random() * 100) + '%';
                 
-                star.style.setProperty('--duration', Math.random() * 3 + 1 + 's');
-                starsContainer.appendChild(star);
-            }
-
-            // Tạo 5 ngôi sao đặc biệt có hào quang lộng lẫy
-            specialStarsData.forEach((data, index) => {
-                const specStar = document.createElement('div');
-                specStar.classList.add('star-special');
-                specStar.innerHTML = '<i class="bi bi-star-fill"></i>';
-                
-                specStar.style.top = (25 + Math.random() * 25) + '%';
-                specStar.style.left = (12 + (index * 18) + Math.random() * 3) + '%';
-                
-                specStar.addEventListener('click', () => {
-                    triggerRainScene(data);
-                });
-
-                starsContainer.appendChild(specStar);
-            });
-        }
-
-        // 2. Khởi tạo hiệu ứng hạt mưa rơi
-        function initRain() {
-            rainContainer.innerHTML = '';
-            for (let i = 0; i < 60; i++) {
-                const drop = document.createElement('div');
-                drop.classList.add('drop');
-                drop.style.left = Math.random() * 100 + '%';
-                drop.style.top = Math.random() * -50 + 'px';
-                drop.style.setProperty('--speed', Math.random() * 0.7 + 0.9 + 's');
-                rainContainer.appendChild(drop);
-            }
-        }
-
-        // 3. Kịch bản khi click vào ngôi sao: Mưa rơi nhẹ + Hiện Cầu Vồng chính giữa + Hiện Mặt trời phía sau
-        function triggerRainScene(data) {
-            document.body.classList.add('rainy-day');
-            
-            // Ẩn mượt mà các ngôi sao thường và đặc biệt
-            const allStars = document.querySelectorAll('.star-normal, .star-special');
-            allStars.forEach(s => s.style.opacity = '0');
-            setTimeout(() => { starsContainer.style.display = 'none'; }, 1000);
-
-            // Kích hoạt mưa rơi
-            rainContainer.style.display = 'block';
-
-            // Hiện đồng thời Mặt trời (phía sau) và Cầu vồng rực rỡ (chính giữa)
-            setTimeout(() => {
-                sun.classList.add('active');
-                rainbow.classList.add('active');
-            }, 500);
-
-            // Nạp nội dung và loạt ảnh vào bảng cuộn mượt mà
-            setTimeout(() => {
-                boxTitle.innerText = data.title;
-                boxText.innerText = data.text;
-                
-                boxImages.innerHTML = '';
-                if(data.images && data.images.length > 0) {
-                    data.images.forEach(url => {
-                        const img = document.createElement('img');
-                        img.src = url;
-                        img.classList.add('content-img');
-                        boxImages.appendChild(img);
-                    });
+                // Phân cấp kích thước lớn nhỏ khác nhau rõ rệt
+                const randSize = Math.random();
+                if (randSize < 0.6) {
+                    star.classList.add('star-small');
+                } else if (randSize < 0.9) {
+                    star.classList.add('star-medium');
+                } else {
+                    star.classList.add('star-large');
                 }
-                contentBox.classList.add('active');
-            }, 1200);
+
+                // Phân cấp tốc độ chớp nháy (chop chop) phát sáng ngẫu nhiên
+                const randTwinkle = Math.random();
+                if (randTwinkle < 0.35) {
+                    star.classList.add('star-twinkle-fast');
+                } else if (randTwinkle < 0.7) {
+                    star.classList.add('star-twinkle-medium');
+                } else {
+                    star.classList.add('star-twinkle-slow');
+                }
+
+                // Độ mờ cơ sở ngẫu nhiên để tăng chiều sâu vũ trụ 3D
+                star.style.opacity = Math.random() * 0.7 + 0.3;
+                fragment.appendChild(star);
+            }
+            starfieldMatrix.appendChild(fragment);
         }
 
-        // 4. Bấm nút giọt nước phục hồi lại trạng thái ban đầu
-        btnBack.addEventListener('click', () => {
-            contentBox.classList.remove('active');
-            sun.classList.remove('active');
-            rainbow.classList.remove('active');
-            
-            rainContainer.style.display = 'none';
-            document.body.classList.remove('rainy-day');
+        // 2. Tạo màn mưa mượt mà gia tốc phần cứng
+        function generatePrecipitationSystem() {
+            rainPrecipitationLayer.innerHTML = '';
+            const fragment = document.createDocumentFragment();
+            for (let i = 0; i < 30; i++) {
+                const line = document.createElement('div');
+                line.classList.add('rain-laser-line');
+                line.style.left = (Math.random() * 100) + '%';
+                line.style.setProperty('--rain-speed', (Math.random() * 0.4 + 0.5) + 's');
+                fragment.appendChild(line);
+            }
+            rainPrecipitationLayer.appendChild(fragment);
+        }
 
-            starsContainer.style.display = 'block';
+        // 3. Cơ chế kích hoạt chuỗi chuyển cảnh mượt mà sang trạng thái cầu vồng mịn
+        function triggerAstralTransition(starId) {
+            const data = cosmicMasterRepository[starId];
+            if (!data) return;
+
+            // Làm mờ hệ thống sao cũ để nhường chỗ cho kỳ quan mới
+            mythologyStarsHub.style.opacity = '0';
+            mythologyStarsHub.style.transform = 'scale3d(0.96, 0.96, 1)';
+            starfieldMatrix.style.opacity = '0.15';
+
+            // Kích hoạt mưa rơi và đổi nền khí quyển mượt mà
+            rainPrecipitationLayer.style.display = 'block';
+            document.body.classList.add('mode-rainbow-active');
+
+            // Hiển thị mặt trời và vòng cung cầu vồng mềm mại bằng RequestAnimationFrame
+            window.requestAnimationFrame(() => {
+                solarOrb.classList.add('activated');
+                vectorRainbowBridge.classList.add('activated');
+            });
+
+            // Đồng bộ dữ liệu lên bảng điều khiển Hologram cao cấp
             setTimeout(() => {
-                const allStars = document.querySelectorAll('.star-normal, .star-special');
-                allStars.forEach(s => s.style.opacity = '1');
-            }, 100);
+                cosmicPortalCard.style.setProperty('--panel-glow-color', `rgb(${data.rgb})`);
+                cosmicPortalCard.style.setProperty('--panel-glow-rgb', data.rgb);
+                
+                portalTitle.innerText = data.title;
+                portalTitle.style.color = `rgb(${data.rgb})`;
+                portalDescription.innerHTML = data.text;
+                
+                portalImagesWrapper.innerHTML = `<img src="${data.images}" class="showcase-illustration" alt="Cosmic Art">`;
+                
+                cosmicPortalCard.classList.add('activated');
+            }, 300);
+        }
+
+        // 4. Reset trạng thái hoàn nguyên không gian bằng nút giọt nước tối giản
+        btnBackToUniverse.addEventListener('click', () => {
+            cosmicPortalCard.classList.remove('activated');
+            solarOrb.classList.remove('activated');
+            vectorRainbowBridge.classList.remove('activated');
+            
+            setTimeout(() => {
+                rainPrecipitationLayer.style.display = 'none';
+                document.body.classList.remove('mode-rainbow-active');
+                
+                window.requestAnimationFrame(() => {
+                    mythologyStarsHub.style.opacity = '1';
+                    mythologyStarsHub.style.transform = 'scale3d(1, 1, 1)';
+                    starfieldMatrix.style.opacity = '1';
+                });
+            }, 350);
         });
 
+        // Khởi chạy hệ thống toàn diện
         window.onload = () => {
-            initSky();
-            initRain();
+            generateAdvancedStarfield();
+            generatePrecipitationSystem();
+            
+            document.querySelectorAll('.epic-star-anchor').forEach(anchor => {
+                anchor.addEventListener('click', function() {
+                    triggerAstralTransition(this.id);
+                });
+            });
         };
     </script>
 </body>
